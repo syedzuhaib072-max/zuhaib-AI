@@ -1,13 +1,10 @@
-import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const { prompt } = await request.json();
+    const { prompt } = await req.json();
 
-    if (!prompt || typeof prompt !== "string") {
-      return NextResponse.json(
-        { error: "Please enter a prompt." },
+    if (!prompt || !prompt.trim()) {
+      return Response.json(
+        { text: "Please enter a message." },
         { status: 400 }
       );
     }
@@ -15,32 +12,63 @@ export async function POST(request: Request) {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return NextResponse.json(
-        { error: "GEMINI_API_KEY is missing in .env.local" },
+      return Response.json(
+        { text: "GEMINI_API_KEY is missing from .env.local" },
         { status: 500 }
       );
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: prompt,
+                },
+              ],
+            },
+          ],
+        }),
+      }
+    );
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-    });
+    const data = await response.json();
 
-    const result = await model.generateContent(prompt);
+    console.log("GEMINI STATUS:", response.status);
+    console.log("GEMINI DATA:", data);
 
-    const response = result.response;
-    const text = response.text();
+    if (!response.ok) {
+      return Response.json(
+        {
+          text:
+            data?.error?.message ||
+            `Gemini API error: ${response.status}`,
+        },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({ text });
-  } catch (error: any) {
-  console.error("Gemini error:", error);
+    const text =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Gemini returned no text.";
 
-  return NextResponse.json(
-    {
-      error: error?.message || "Gemini API request failed",
-    },
-    { status: 500 }
-  );
-}
+    return Response.json({ text });
+  } catch (error) {
+    console.error("FULL SERVER ERROR:", error);
+
+    return Response.json(
+      {
+        text: "Server error while contacting Gemini.",
+      },
+      { status: 500 }
+    );
+  }
 }

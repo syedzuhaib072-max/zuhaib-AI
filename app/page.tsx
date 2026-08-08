@@ -1,169 +1,81 @@
-"use client";
-
-import { useState } from "react";
-
-export default function WriterPage() {
-  const [idea, setIdea] = useState("");
-  const [result, setResult] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const generateContent = () => {
-    if (!idea.trim()) {
-      setResult("⚠️ Please write an idea first.");
-      return;
-    }
-
-    setLoading(true);
-    setResult("");
-    setCopied(false);
-
-    setTimeout(() => {
-      const generatedText = `AI GENERATED CONTENT
-
-Title: ${idea}
-
-Introduction
-
-Artificial intelligence is changing the way people learn, work, and create content. Today, AI tools are becoming increasingly useful for students, creators, businesses, and professionals.
-
-Main Content
-
-${idea} is an important topic in today's digital world. With the help of modern AI tools, users can save time, improve productivity, and create high-quality content more efficiently.
-
-AI can help users generate ideas, write content, analyze information, solve problems, and discover new opportunities. When used correctly, artificial intelligence becomes a powerful assistant for creativity and productivity.
-
-Benefits
-
-• Saves time
-• Improves productivity
-• Helps generate creative ideas
-• Makes difficult tasks easier
-• Supports learning and innovation
-
-Conclusion
-
-The future of artificial intelligence is full of possibilities. By using AI tools responsibly and creatively, people can work smarter, learn faster, and achieve better results.
-
-Created with Zuhaib-AI Writer 🚀`;
-
-      setResult(generatedText);
-      setLoading(false);
-    }, 1200);
-  };
-
-  const copyContent = async () => {
-    await navigator.clipboard.writeText(result);
-    setCopied(true);
-
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
-  };
-
-  const clearAll = () => {
-    setIdea("");
-    setResult("");
-    setCopied(false);
-  };
-
+export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white px-4 py-12">
-      <div className="max-w-5xl mx-auto">
+    <main className="min-h-screen bg-slate-950 text-white">
 
-        {/* Header */}
-        <div className="text-center mb-12">
-          <p className="text-cyan-400 font-bold tracking-widest text-sm">
-            ZUHAIB-AI
-          </p>
+      {/* Navbar */}
+      <nav className="flex justify-between items-center px-8 py-6 border-b border-slate-800">
+        <h1 className="text-3xl font-bold text-cyan-400">
+          🚀 Zuhaib AI
+        </h1>
 
-          <h1 className="text-4xl md:text-6xl font-extrabold mt-4">
-            AI Content Writer
-          </h1>
-
-          <p className="text-slate-400 mt-5 text-lg">
-            Create powerful blog posts, social media captions, emails, and more.
-          </p>
+        <div className="flex gap-6">
+          <a href="/" className="hover:text-cyan-400">Home</a>
+          <a href="/chat" className="hover:text-cyan-400">Chat</a>
+          <a href="/writer" className="hover:text-cyan-400">Writer</a>
+          <a href="/tools" className="hover:text-cyan-400">Tools</a>
+          <a href="/pricing" className="hover:text-cyan-400">Pricing</a>
+          <a href="/login" className="hover:text-cyan-400">Login</a>
         </div>
+      </nav>
 
-        {/* Main Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-10 shadow-2xl">
+      {/* Hero */}
+      <section className="max-w-6xl mx-auto px-6 py-20 text-center">
 
-          {/* Label */}
-          <div className="flex justify-between items-center mb-4">
-            <label className="text-xl font-bold">
-              ✍️ What do you want to write?
-            </label>
+        <h1 className="text-6xl font-extrabold">
+          🚀 Zuhaib AI
+        </h1>
 
-            <span className="text-sm text-slate-500">
-              {idea.length}/2000
-            </span>
-          </div>
-
-          {/* Textarea */}
-          <textarea
-            value={idea}
-            onChange={(event) => setIdea(event.target.value)}
-            maxLength={2000}
-            placeholder="Example: Write a blog post about AI tools for students..."
-            className="w-full h-52 resize-none rounded-2xl bg-slate-800 border border-slate-700 p-5 text-white outline-none focus:border-cyan-400 transition"
-          />
-
-          {/* Buttons */}
-          <div className="flex flex-wrap gap-4 mt-6">
-
-            <button
-              type="button"
-              onClick={generateContent}
-              disabled={loading}
-              className="bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 text-black font-bold px-7 py-3 rounded-xl transition"
-            >
-              {loading ? "Generating..." : "✨ Generate Content"}
-            </button>
-
-            <button
-              type="button"
-              onClick={clearAll}
-              className="bg-slate-700 hover:bg-slate-600 px-7 py-3 rounded-xl font-semibold transition"
-            >
-              🗑️ Clear
-            </button>
-
-          </div>
-
-          {/* Result */}
-          {result && (
-            <div className="mt-10">
-
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">
-                  📝 Generated Content
-                </h2>
-
-                <button
-                  type="button"
-                  onClick={copyContent}
-                  className="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm"
-                >
-                  {copied ? "✅ Copied!" : "📋 Copy"}
-                </button>
-              </div>
-
-              <div className="whitespace-pre-line bg-slate-800 border border-cyan-500/30 rounded-2xl p-6 text-slate-200 leading-8">
-                {result}
-              </div>
-
-            </div>
-          )}
-
-        </div>
-
-        {/* Footer */}
-        <p className="text-center text-slate-600 mt-10">
-          Built with ❤️ by Zuhaib-AI
+        <p className="mt-6 text-xl text-slate-400">
+          One AI Platform for Chat, Writing, Business, Coding, Prompts and Productivity.
         </p>
 
-      </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-14">
+
+          <a
+            href="/chat"
+            className="bg-cyan-500 hover:bg-cyan-400 rounded-2xl p-8"
+          >
+            <h2 className="text-2xl font-bold">💬 AI Chat</h2>
+            <p className="mt-3">Ask anything with AI.</p>
+          </a>
+
+          <a
+            href="/writer"
+            className="bg-purple-600 hover:bg-purple-500 rounded-2xl p-8"
+          >
+            <h2 className="text-2xl font-bold">✍️ AI Writer</h2>
+            <p className="mt-3">Generate blogs, emails and content.</p>
+          </a>
+
+          <a
+            href="/tools"
+            className="bg-green-600 hover:bg-green-500 rounded-2xl p-8"
+          >
+            <h2 className="text-2xl font-bold">🛠 AI Tools</h2>
+            <p className="mt-3">Use powerful AI utilities.</p>
+          </a>
+
+          <a
+            href="/business"
+            className="bg-orange-600 hover:bg-orange-500 rounded-2xl p-8"
+          >
+            <h2 className="text-2xl font-bold">💼 Business AI</h2>
+            <p className="mt-3">Marketing, sales and business ideas.</p>
+          </a>
+
+        </div>
+
+        <div className="mt-16">
+          <a
+            href="/pricing"
+            className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-8 py-4 rounded-xl"
+          >
+            Upgrade to Pro
+          </a>
+        </div>
+
+      </section>
+
     </main>
   );
 }
