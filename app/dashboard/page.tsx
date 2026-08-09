@@ -5,14 +5,92 @@ import { isProUser } from "@/lib/proAccess";
 
 export default function DashboardPage() {
   const [isPro, setIsPro] = useState(false);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     setIsPro(isProUser());
+
+    const savedUser = localStorage.getItem("zuhaib_user");
+
+    if (savedUser) {
+      try {
+        const user = JSON.parse(savedUser);
+        setUserName(user.name || "");
+      } catch {
+        setUserName("");
+      }
+    }
   }, []);
+
+  function handleLogout() {
+    localStorage.removeItem("zuhaib_logged_in");
+    window.location.href = "/login";
+  }
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <div className="mx-auto max-w-6xl px-5 py-10">
+      <div className="mx-auto max-w-6xl px-5 py-6">
+
+        {/* Navigation */}
+        <nav className="mb-10 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+          <a
+            href="/dashboard"
+            className="text-xl font-bold text-cyan-400"
+          >
+            🤖 Zuhaib-AI
+          </a>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href="/dashboard"
+              className="rounded-lg bg-cyan-500/10 px-3 py-2 text-sm text-cyan-300"
+            >
+              🏠 Dashboard
+            </a>
+
+            <a
+              href="/chat"
+              className="rounded-lg px-3 py-2 text-sm hover:bg-slate-800"
+            >
+              🤖 Chat
+            </a>
+
+            <a
+              href="/writer"
+              className="rounded-lg px-3 py-2 text-sm hover:bg-slate-800"
+            >
+              ✍️ Writer
+            </a>
+
+            <a
+              href="/tools"
+              className="rounded-lg px-3 py-2 text-sm hover:bg-slate-800"
+            >
+              🛠️ Tools
+            </a>
+
+            <a
+              href="/business"
+              className="rounded-lg px-3 py-2 text-sm hover:bg-slate-800"
+            >
+              💼 Business
+            </a>
+
+            <a
+              href="/proaccesss"
+              className="rounded-lg px-3 py-2 text-sm font-bold text-cyan-300 hover:bg-cyan-500/10"
+            >
+              💎 Pro
+            </a>
+
+            <button
+              onClick={handleLogout}
+              className="rounded-lg border border-red-500/30 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10"
+            >
+              🚪 Logout
+            </button>
+          </div>
+        </nav>
 
         {/* Header */}
         <div className="mb-10">
@@ -21,7 +99,7 @@ export default function DashboardPage() {
           </p>
 
           <h1 className="mt-2 text-4xl font-bold">
-            👋 Welcome to your Dashboard
+            👋 Welcome{userName ? `, ${userName}` : ""}!
           </h1>
 
           <p className="mt-3 text-slate-400">
@@ -29,7 +107,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Account card */}
+        {/* Account */}
         <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
@@ -60,7 +138,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* AI products */}
+        {/* AI Tools */}
         <section className="mt-8">
           <h2 className="mb-4 text-2xl font-bold">
             🚀 Your AI Tools
@@ -119,7 +197,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* Pro features */}
+        {/* Pro Features */}
         <section className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
           <h2 className="text-2xl font-bold">
             💎 Pro Features
@@ -135,7 +213,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* Payment status */}
+        {/* Subscription */}
         <section className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-center">
           <p className="text-sm text-slate-400">
             Subscription

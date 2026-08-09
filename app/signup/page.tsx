@@ -2,36 +2,30 @@
 
 import { useState } from "react";
 
-export default function LoginPage() {
+export default function SignupPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [created, setCreated] = useState(false);
 
-  function handleLogin(e: React.FormEvent) {
+  function handleSignup(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!email.trim()) {
+    if (!name.trim() || !email.trim()) {
       return;
     }
 
-    const savedUser = localStorage.getItem("zuhaib_user");
+    localStorage.setItem(
+      "zuhaib_user",
+      JSON.stringify({
+        name: name.trim(),
+        email: email.trim(),
+      })
+    );
 
-    if (!savedUser) {
-      alert("No account found. Please create an account first.");
-      return;
-    }
-
-    const user = JSON.parse(savedUser);
-
-    if (user.email.toLowerCase() !== email.trim().toLowerCase()) {
-      alert("Email does not match the saved account.");
-      return;
-    }
-
-    localStorage.setItem("zuhaib_logged_in", "true");
-    setLoggedIn(true);
+    setCreated(true);
   }
 
-  if (loggedIn) {
+  if (created) {
     return (
       <main className="min-h-screen bg-slate-950 px-5 py-12 text-white">
         <div className="mx-auto max-w-md text-center">
@@ -39,11 +33,11 @@ export default function LoginPage() {
           <div className="text-6xl">🎉</div>
 
           <h1 className="mt-5 text-3xl font-bold">
-            Login Successful!
+            Account Created!
           </h1>
 
           <p className="mt-3 text-slate-400">
-            Welcome back to Zuhaib-AI.
+            Welcome to Zuhaib-AI, {name}.
           </p>
 
           <a
@@ -63,23 +57,35 @@ export default function LoginPage() {
       <div className="mx-auto max-w-md">
 
         <div className="mb-8 text-center">
-          <div className="text-5xl">🔐</div>
+          <div className="text-5xl">🤖</div>
 
           <h1 className="mt-4 text-4xl font-bold">
-            Welcome Back
+            Create your account
           </h1>
 
           <p className="mt-3 text-slate-400">
-            Login to your Zuhaib-AI account.
+            Join Zuhaib-AI and start using AI tools.
           </p>
         </div>
 
         <form
-          onSubmit={handleLogin}
+          onSubmit={handleSignup}
           className="rounded-2xl border border-slate-800 bg-slate-900 p-7"
         >
 
           <label className="block text-sm font-medium">
+            Name
+          </label>
+
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-cyan-400"
+          />
+
+          <label className="mt-5 block text-sm font-medium">
             Email
           </label>
 
@@ -95,25 +101,21 @@ export default function LoginPage() {
             type="submit"
             className="mt-7 w-full rounded-xl bg-cyan-400 px-5 py-3 font-bold text-black hover:bg-cyan-300"
           >
-            Login
+            Create Account
           </button>
 
           <p className="mt-4 text-center text-xs text-slate-500">
-            Demo login system for development.
+            Account system is currently in demo mode.
           </p>
 
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-slate-400">
-            Don't have an account?
-          </p>
-
           <a
-            href="/signup"
-            className="mt-2 inline-block text-sm text-cyan-400 hover:text-cyan-300"
+            href="/dashboard"
+            className="text-sm text-cyan-400 hover:text-cyan-300"
           >
-            Create an account →
+            ← Back to Dashboard
           </a>
         </div>
 
