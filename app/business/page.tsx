@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { isProUser } from "@/lib/proAccess";
 
 const businessTools = [
   {
@@ -54,10 +55,15 @@ const businessTools = [
 ];
 
 export default function BusinessPage() {
+  const [isPro, setIsPro] = useState(false);
   const [selectedTool, setSelectedTool] = useState(businessTools[0]);
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setIsPro(isProUser());
+  }, []);
 
   async function runBusinessAI() {
     if (!input.trim() || loading) return;
@@ -113,6 +119,44 @@ Give a practical, clear, professional answer that a small business owner can act
     setResult("");
   }
 
+  /* PRO LOCK */
+  if (!isPro) {
+    return (
+      <main className="min-h-screen bg-slate-950 px-5 py-12 text-white">
+        <div className="mx-auto max-w-xl text-center">
+          <div className="text-6xl">🔒</div>
+
+          <h1 className="mt-5 text-4xl font-bold">
+            Business AI Pro
+          </h1>
+
+          <p className="mt-4 text-slate-400">
+            This feature is available with Zuhaib-AI Pro.
+          </p>
+
+          <p className="mt-5 text-3xl font-bold">
+            ₹399
+            <span className="text-base font-normal text-slate-400">
+              /month
+            </span>
+          </p>
+
+          <a
+            href="/proaccesss"
+            className="mt-7 inline-block rounded-xl bg-cyan-400 px-7 py-3 font-bold text-black hover:bg-cyan-300"
+          >
+            💎 Upgrade to Pro
+          </a>
+
+          <p className="mt-4 text-xs text-slate-500">
+            Payment integration coming soon.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  /* PRO BUSINESS AI */
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <div className="mx-auto max-w-6xl px-5 py-10">
@@ -128,6 +172,12 @@ Give a practical, clear, professional answer that a small business owner can act
           <p className="mt-3 text-slate-400">
             AI-powered tools to help you plan, market and grow your business.
           </p>
+
+          <div className="mt-4">
+            <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-300">
+              💎 Pro Active
+            </span>
+          </div>
         </div>
 
         {/* Business tools */}
