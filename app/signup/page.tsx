@@ -1,55 +1,50 @@
 "use client";
 
 import { useState } from "react";
+import { createClient } from "@/lib/supabase";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [created, setCreated] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  function handleSignup(e: React.FormEvent) {
+  async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
 
     if (!name.trim() || !email.trim()) {
+      setMessage("Please enter your name and email.");
       return;
     }
 
-    localStorage.setItem(
-      "zuhaib_user",
-      JSON.stringify({
-        name: name.trim(),
-        email: email.trim(),
-      })
-    );
+    setLoading(true);
+    setMessage("");
 
-    setCreated(true);
-  }
+    const supabase = createClient();
 
-  if (created) {
-    return (
-      <main className="min-h-screen bg-slate-950 px-5 py-12 text-white">
-        <div className="mx-auto max-w-md text-center">
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim(),
+      password: crypto.randomUUID(),
+      options: {
+        data: {
+          name: name.trim(),
+        },
+      },
+    });
 
-          <div className="text-6xl">🎉</div>
+    if (error) {
+      setMessage(error.message);
+      setLoading(false);
+      return;
+    }
 
-          <h1 className="mt-5 text-3xl font-bold">
-            Account Created!
-          </h1>
+    if (data.user) {
+      setMessage(
+        "Account created! Check your email if email confirmation is enabled."
+      );
+    }
 
-          <p className="mt-3 text-slate-400">
-            Welcome to Zuhaib-AI, {name}.
-          </p>
-
-          <a
-            href="/dashboard"
-            className="mt-7 inline-block rounded-xl bg-cyan-400 px-7 py-3 font-bold text-black hover:bg-cyan-300"
-          >
-            Go to Dashboard →
-          </a>
-
-        </div>
-      </main>
-    );
+    setLoading(false);
   }
 
   return (
@@ -72,7 +67,6 @@ export default function SignupPage() {
           onSubmit={handleSignup}
           className="rounded-2xl border border-slate-800 bg-slate-900 p-7"
         >
-
           <label className="block text-sm font-medium">
             Name
           </label>
@@ -99,23 +93,33 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            className="mt-7 w-full rounded-xl bg-cyan-400 px-5 py-3 font-bold text-black hover:bg-cyan-300"
+            disabled={loading}
+            className="mt-7 w-full rounded-xl bg-cyan-400 px-5 py-3 font-bold text-black hover:bg-cyan-300 disabled:opacity-50"
           >
-            Create Account
+            {loading ? "Creating account..." : "Create Account"}
           </button>
 
-          <p className="mt-4 text-center text-xs text-slate-500">
-            Account system is currently in demo mode.
-          </p>
+          {message && (
+            <p className="mt-5 rounded-xl border border-slate-700 bg-slate-950 p-4 text-sm text-slate-300">
+              {message}
+            </p>
+          )}
 
+          <p className="mt-4 text-center text-xs text-slate-500">
+            Secure authentication powered by Supabase.
+          </p>
         </form>
 
         <div className="mt-6 text-center">
+          <p className="text-sm text-slate-400">
+            Already have an account?
+          </p>
+
           <a
-            href="/dashboard"
-            className="text-sm text-cyan-400 hover:text-cyan-300"
+            href="/login"
+            className="mt-2 inline-block text-sm text-cyan-400 hover:text-cyan-300"
           >
-            ← Back to Dashboard
+            Login →
           </a>
         </div>
 
