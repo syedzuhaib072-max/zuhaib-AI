@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Zuhaib-AI Writer Pro",
-  description: "Create professional content with AI in seconds.",
+  title: "Zuhaib-AI Writer Pro 1 Free AI Writing Tools",
+  description: "Zuhaib-AI provides free AI writing, content generation,rewriting, business and productivity tools.",
   verification: {
     google: "GmmtQBLQNvTBLDbiwsGwhaOjUMvhH_5pWbuSq9ViUFc",
   },
