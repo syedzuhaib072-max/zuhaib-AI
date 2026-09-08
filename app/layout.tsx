@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Zuhaib-AI Writer Pro",
   description: "Create professional content with AI in seconds.",
   verification: {
-    google: "GmmtQBLQNvTBLDb1wsGwhaOJUMvHhH_SpWbUs9q9ViUFc",
+    google: "GmmtQBLQNvTBLDbiwsGwhaOjUMvhH_5pWbuSq9ViUFc",
   },
 };
 
